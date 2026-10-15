@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Manga District</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@700&family=Zen+Kaku+Gothic+New:wght@500;700&display=swap">
+<style>
+:root{--bg:#EEF3FA;--panel:#fff;--ink:#14213D;--muted:#5b6784;--pop:#FFD23F;--red:#E63946;--teal:#1F9E91;--line:#14213D;--dot:rgba(20,33,61,.09);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1424;--panel:#18213a;--ink:#f1f4fb;--muted:#9aa6c4;--line:#f1f4fb;--dot:rgba(255,255,255,.06)}}
+:root[data-theme="dark"]{--bg:#0e1424;--panel:#18213a;--ink:#f1f4fb;--muted:#9aa6c4;--line:#f1f4fb;--dot:rgba(255,255,255,.06)}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg) radial-gradient(var(--dot) 1.2px,transparent 1.4px) 0 0/14px 14px;color:var(--ink);font:600 15px/1.45 Nunito,system-ui,sans-serif}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--pop);color:#14213D;border-bottom:4px solid #14213D}
+h1{font:400 34px/1 Bangers,Impact,sans-serif;letter-spacing:1.5px;margin:0;text-shadow:3px 3px 0 #fff}
+nav{display:flex;gap:8px}
+button,input,select{font:inherit;color:inherit}
+.tab{padding:7px 14px;border:3px solid #14213D;background:#fff;color:#14213D;border-radius:6px;cursor:pointer;font-weight:800}
+.tab[aria-pressed=true]{background:#14213D;color:#FFD23F}
+main{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:18px;padding:18px 20px;max-width:1200px;margin:auto}
+@media(max-width:860px){main{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:3px solid var(--line);border-radius:6px;box-shadow:6px 6px 0 var(--line);padding:14px}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+input,select{padding:8px 10px;border:3px solid var(--line);border-radius:6px;background:var(--panel)}
+#q{flex:1;min-width:150px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.card{border:3px solid var(--line);border-radius:6px;background:var(--bg);padding:0;cursor:pointer;text-align:left;overflow:hidden;display:flex;flex-direction:column}
+.card:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--line)}
+.card:disabled{opacity:.5;cursor:not-allowed}
+.cover{height:84px;display:flex;align-items:flex-end;padding:8px;font:400 19px/1 Bangers,Impact,sans-serif;letter-spacing:1px;color:#fff;border-bottom:3px solid var(--line)}
+.info{padding:8px 10px}.info b{display:block}.info small{color:var(--muted)}
+.price{color:var(--red);font-weight:800}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 0;border-bottom:2px dashed var(--muted)}
+.qty button{width:26px;height:26px;border:2px solid var(--line);background:var(--pop);color:#14213D;border-radius:4px;cursor:pointer;font-weight:800}
+.tot{display:flex;justify-content:space-between;padding:3px 0}
+.big{font:400 30px/1 Bangers,Impact,sans-serif;letter-spacing:1px}
+.pay{width:100%;margin:6px 0}
+.go{width:100%;margin-top:10px;padding:12px;border:3px solid var(--line);border-radius:6px;background:var(--red);color:#fff;font:400 24px Bangers,Impact,sans-serif;letter-spacing:1.5px;cursor:pointer}
+.go:disabled{opacity:.45;cursor:not-allowed}
+.ghost{background:none;border:none;color:var(--muted);cursor:pointer;text-decoration:underline}
+.err{color:var(--red);min-height:1.3em;margin:4px 0 0}
+dialog{border:3px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);max-width:360px;width:92%;box-shadow:8px 8px 0 var(--line)}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:7px 6px;border-bottom:2px solid var(--dot)}
+.scroll{overflow-x:auto}
+:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+#rcpt{font-family:'Courier New',monospace;font-size:13px}#rcpt h2{text-align:center}.ctr{text-align:center}
+.acts{display:flex;gap:8px;margin-top:10px}.acts .go{margin:0;font-size:18px}.prt{background:var(--teal)}.quick{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0 8px}#qrisImg{width:100%;max-width:260px;display:block;margin:6px auto;border:3px solid var(--line);border-radius:6px;background:#fff}
+.mini{padding:3px 8px;border:2px solid var(--line);border-radius:4px;background:var(--pop);color:#14213D;font-weight:800;cursor:pointer}
+@media print{body>*:not(dialog){display:none!important}dialog{position:static;box-shadow:none;border:none;width:80mm;max-width:80mm;margin:0;padding:0;color:#000;background:#fff}dialog::backdrop{display:none}.acts,.noprint{display:none}}
+/* Tema halaman manga: tinta hitam di atas kertas putih, satu aksen merah */
+:root{--bg:#F1F2F4;--panel:#fff;--ink:#16161A;--muted:#6a6d76;--pop:#16161A;--red:#C8102E;--teal:#16161A;--line:#16161A;--dot:rgba(0,0,0,.06)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121316;--panel:#1b1c21;--ink:#f2f2f4;--muted:#9a9ca6;--pop:#f2f2f4;--red:#E5334B;--line:#3a3c46;--dot:rgba(255,255,255,.06)}}
+:root[data-theme="dark"]{--bg:#121316;--panel:#1b1c21;--ink:#f2f2f4;--muted:#9a9ca6;--pop:#f2f2f4;--red:#E5334B;--line:#3a3c46;--dot:rgba(255,255,255,.06)}
+body{background:var(--bg);font:500 15px/1.5 'Zen Kaku Gothic New',system-ui,sans-serif}
+header{background:#16161A;color:#fff;border-bottom:3px solid var(--red)}
+h1{font:700 28px/1 'Shippori Mincho','Hiragino Mincho ProN',Georgia,serif;letter-spacing:.5px;text-shadow:none}
+.big{font:700 22px/1.1 'Shippori Mincho','Hiragino Mincho ProN',Georgia,serif;letter-spacing:0}
+.tab{border:1px solid #fff;background:transparent;color:#fff;border-radius:2px;font-weight:700}
+.tab[aria-pressed=true]{background:#fff;color:#16161A}
+.panel{border:1px solid var(--line);border-radius:2px;box-shadow:none}
+input,select{border:1px solid var(--line);border-radius:2px}
+.card{border:1px solid var(--line);border-radius:2px;background:var(--panel)}
+.card:hover:not(:disabled){transform:none;box-shadow:inset 0 0 0 2px var(--red)}
+.cover{height:72px;border-bottom:1px solid var(--line);font:700 15px/1.2 'Shippori Mincho',Georgia,serif;letter-spacing:0}
+.row{border-bottom:1px solid rgba(128,128,128,.3)}
+.qty button,.mini{background:var(--ink);color:var(--panel);border:1px solid var(--ink);border-radius:2px}
+.go{font:700 17px 'Zen Kaku Gothic New',system-ui,sans-serif;letter-spacing:.5px;border:1px solid var(--red);border-radius:2px;background:var(--red);color:#fff}
+.prt{background:var(--ink);border-color:var(--ink);color:var(--panel)}
+dialog{border:1px solid var(--line);border-radius:2px;box-shadow:0 14px 40px rgba(0,0,0,.35)}
+:focus-visible{outline:3px solid var(--red)}
+@media print{dialog{border:none;box-shadow:none}}
+</style>
+</head>
+<body>
+<header>
+<h1>Manga District</h1>
+<nav><button class="tab" id="tKasir" aria-pressed="true">Kasir</button><button class="tab" id="tRiwayat" aria-pressed="false">Riwayat</button></nav>
+</header>
+
+<main id="vKasir">
+<section class="panel">
+<div class="tools"><input id="q" type="search" placeholder="Cari judul komik" aria-label="Cari judul komik"><select id="cat" aria-label="Kategori"></select></div>
+<div class="grid" id="grid"></div>
+</section>
+<aside class="panel">
+<h2 style="margin:0 0 6px" class="big">Keranjang</h2>
+<div id="cart"></div>
+<div class="tot"><span>Subtotal</span><span id="sub">Rp0</span></div>
+<label class="tot"><span>Diskon (%)</span><input id="disc" type="number" min="0" max="100" value="0" style="width:80px"></label>
+<div class="tot big"><span>Total</span><span id="total">Rp0</span></div>
+<input type="hidden" id="method" value="Tunai">
+<div id="cashBox"><input class="pay" id="paid" type="number" min="0" placeholder="Uang diterima (Rp)" aria-label="Uang diterima">
+<div class="tot big"><span id="chgL">Kembalian</span><b id="chg">Rp0</b></div></div>
+<p class="err" id="err" role="alert"></p>
+<button class="go" id="go" disabled>Bayar</button>
+<button class="ghost" id="clr">Kosongkan keranjang</button>
+</aside>
+</main>
+
+<main id="vRiwayat" hidden style="grid-template-columns:1fr">
+<section class="panel">
+<h2 class="big" style="margin:0 0 8px">Riwayat Penjualan</h2>
+<p id="sum"></p>
+<div class="scroll"><table><thead><tr><th>No</th><th>Waktu</th><th>Item</th><th>Total</th><th>Metode</th><th></th></tr></thead><tbody id="hist"></tbody></table></div>
+<div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:10px"><button class="mini" id="clrHist">Hapus riwayat penjualan</button><button class="ghost" id="reset">Reset data stok dan riwayat</button></div>
+</section>
+</main>
+
+<dialog id="dlg"><div id="rcpt"></div><div class="acts"><button class="go prt" id="prt">Cetak struk</button><button class="go" id="ok">Selesai</button></div><p class="noprint" id="pmsg" role="status"></p></dialog>
+
+<script>
+const rp=n=>'Rp'+Math.round(n).toLocaleString('id-ID');
+const COLORS={Manga:'#1f3a5f',Fantasi:'#4a3f7a',Aksi:'#9b1c2c',Romansa:'#8a3b62','Slice of Life':'#2f6f62','Box Set':'#3b3b42'};
+const SEED=[
+['Raja Menara Vol. 1','Fantasi',55000,12],['Raja Menara Vol. 2','Fantasi',55000,9],['Penyihir Bulan Vol. 1','Fantasi',52000,10],
+['Pemburu Bayangan Vol. 1','Aksi',58000,14],['Pemburu Bayangan Vol. 2','Aksi',58000,11],['Pedang Tanpa Nama Vol. 3','Aksi',54000,6],
+['Putri Rembulan Vol. 2','Romansa',52000,8],['Surat untuk Musim Semi Vol. 1','Romansa',50000,7],['Kafe di Ujung Senja Vol. 1','Slice of Life',48000,10],
+['Raja Menara Box Set 1-5','Box Set',250000,3],['Pemburu Bayangan Box Set 1-4','Box Set',215000,2],['Dapur Si Naga Vol. 1','Slice of Life',46000,0],
+['Attack on Titan Vol. 1','Manga',35000,15],['Attack on Titan Vol. 2','Manga',35000,12],['Attack on Titan Vol. 3','Manga',35000,10]
+].map((p,i)=>({id:i+1,title:p[0],cat:p[1],price:p[2],stock:p[3]}));
+let products,history,cart={};
+try{products=JSON.parse(localStorage.getItem('kk_p2'))||null;history=JSON.parse(localStorage.getItem('kk_h'))||null}catch(e){}
+products=products||SEED.map(x=>({...x}));history=history||[];
+SEED.forEach(s=>{if(!products.some(p=>p.title===s.title))products.push({...s,id:Math.max(0,...products.map(p=>p.id))+1})});
+const save=()=>{try{localStorage.setItem('kk_p2',JSON.stringify(products));localStorage.setItem('kk_h',JSON.stringify(history))}catch(e){}};
+const $=id=>document.getElementById(id);
+
+$('cat').innerHTML='<option value="">Semua kategori</option>'+Object.keys(COLORS).map(c=>`<option>${c}</option>`).join('');
+
+function renderGrid(){
+ const q=$('q').value.toLowerCase(),c=$('cat').value;
+ const list=products.filter(p=>p.title.toLowerCase().includes(q)&&(!c||p.cat===c));
+ $('grid').innerHTML=list.length?list.map(p=>{const left=p.stock-(cart[p.id]||0);
+  return `<button class="card" data-id="${p.id}" ${left<=0?'disabled':''}><div class="cover" style="background:${COLORS[p.cat]}">${p.cat}</div><div class="info"><b>${p.title}</b><span class="price">${rp(p.price)}</span><br><small>${p.stock===0?'Stok habis':'Stok '+left}</small></div></button>`}).join(''):'<p>Tidak ada komik yang cocok. Ubah kata kunci atau kategori.</p>';
+}
+function totals(){
+ const sub=Object.entries(cart).reduce((s,[id,q])=>s+products.find(p=>p.id==id).price*q,0);
+ const d=Math.min(100,Math.max(0,+$('disc').value||0));
+ const total=sub*(1-d/100);return{sub,total,d};
+}
+function renderCart(){
+ const ids=Object.keys(cart);
+ $('cart').innerHTML=ids.length?ids.map(id=>{const p=products.find(x=>x.id==id);return `<div class="row"><div><b>${p.title}</b><br><small>${rp(p.price)}</small></div><div class="qty"><button data-d="-1" data-id="${id}" aria-label="Kurangi">-</button> ${cart[id]} <button data-d="1" data-id="${id}" aria-label="Tambah">+</button></div></div>`}).join(''):'<p>Keranjang kosong. Klik komik untuk menambahkan.</p>';
+ const t=totals();$('sub').textContent=rp(t.sub);$('total').textContent=rp(t.total);
+ const paid=+$('paid').value||0;$('cashBox').hidden=$('method').value!=='Tunai';const diff=paid-t.total,short=paid>0&&diff<0;$('chgL').textContent=short?'Kurang':'Kembalian';$('chg').textContent=rp(paid>0?Math.abs(diff):0);$('chg').style.color=short?'var(--red)':'';
+ $('go').disabled=!ids.length;$('go').textContent='Bayar';renderGrid();
+}
+$('grid').onclick=e=>{const b=e.target.closest('.card');if(!b)return;const id=b.dataset.id,p=products.find(x=>x.id==id);
+ if((cart[id]||0)<p.stock){cart[id]=(cart[id]||0)+1;renderCart()}};
+$('cart').onclick=e=>{const b=e.target.closest('button');if(!b)return;const id=b.dataset.id,p=products.find(x=>x.id==id);
+ cart[id]=(cart[id]||0)+ +b.dataset.d;if(cart[id]<=0)delete cart[id];if(cart[id]>p.stock)cart[id]=p.stock;renderCart()};
+['q','cat'].forEach(i=>$(i).oninput=renderGrid);
+['disc','paid','method'].forEach(i=>$(i).oninput=renderCart);
+$('clr').onclick=()=>{cart={};$('err').textContent='';renderCart()};
+
+$('go').onclick=()=>{
+ const t=totals(),m=$('method').value,cash=m==='Tunai',paid=cash?(+$('paid').value||0):t.total;
+ if(cash&&paid<t.total){$('err').textContent='Uang diterima kurang '+rp(t.total-paid)+'. Masukkan jumlah yang cukup.';return}
+ $('err').textContent='';
+ const items=Object.entries(cart).map(([id,q])=>{const p=products.find(x=>x.id==id);p.stock-=q;return{title:p.title,qty:q,price:p.price}});
+ const trx={method:m,no:history.length+1,time:new Date().toLocaleString('id-ID'),items,sub:t.sub,d:t.d,total:t.total,paid,change:paid-t.total};
+ history.unshift(trx);save();
+ showReceipt(trx);cart={};$('paid').value='';$('disc').value=0;renderCart();renderHist();
+};
+function showReceipt(t){
+ const m=t.method||'Tunai';
+ $('rcpt').innerHTML=`<h2 class="big" style="margin:0">MANGA DISTRICT</h2><div class="ctr">Struk #${t.no}<br>${t.time}</div><hr>`+
+  t.items.map(i=>`<div>${i.title}</div><div class="tot"><span>${i.qty} x ${rp(i.price)}</span><span>${rp(i.qty*i.price)}</span></div>`).join('')+
+  `<hr><div class="tot"><span>Subtotal</span><span>${rp(t.sub)}</span></div><div class="tot"><span>Diskon ${t.d}%</span><span>-${rp(t.sub-t.total)}</span></div><div class="tot"><b>Total</b><b>${rp(t.total)}</b></div><div class="tot"><span>Bayar (${m})</span><span>${rp(t.paid)}</span></div>`+
+  (m==='Tunai'?`<div class="tot"><span>Kembali</span><span>${rp(t.change)}</span></div>`:'')+
+  `<hr><div class="ctr">Terima kasih sudah berbelanja!</div>`;
+ $('pmsg').textContent='';
+ if(!$('dlg').open)$('dlg').showModal();
+}
+$('ok').onclick=()=>$('dlg').close();
+function printReceipt(){
+ const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Struk</title><style>body{font:13px 'Courier New',monospace;width:76mm;margin:0 auto;padding:4mm;color:#000}.tot{display:flex;justify-content:space-between}.ctr{text-align:center}h2{text-align:center;margin:0;font-size:22px}hr{border:0;border-top:1px dashed #000}</style></head><body>${$('rcpt').innerHTML}</body></html>`;
+ let w=null;
+ try{w=window.open('','_blank')}catch(e){}
+ if(w){w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),300);return}
+ try{window.print()}catch(e){}
+ $('pmsg').textContent='Jendela cetak belum muncul? Browser memblokir cetak dari tombol ini. Tekan Ctrl+P (atau menu Cetak di browser) saat struk terbuka. Hanya struk yang akan tercetak.';
+}
+$('prt').onclick=printReceipt;
+$('hist').onclick=e=>{const b=e.target.closest('button');if(b)showReceipt(history.find(h=>h.no==b.dataset.no))};
+
+function renderHist(){
+ const sum=history.reduce((s,h)=>s+h.total,0);
+ $('sum').textContent=history.length?`${history.length} transaksi, omzet ${rp(sum)}`:'Belum ada transaksi. Selesaikan pembayaran di halaman Kasir.';
+ $('hist').innerHTML=history.map(h=>`<tr><td>${h.no}</td><td>${h.time}</td><td>${h.items.map(i=>i.qty+'x '+i.title).join(', ')}</td><td>${rp(h.total)}</td><td>${h.method||'Tunai'}</td><td><button class="mini" data-no="${h.no}">Cetak</button></td></tr>`).join('');
+}
+function show(k){$('vKasir').hidden=k!=='k';$('vRiwayat').hidden=k==='k';
+ $('tKasir').setAttribute('aria-pressed',k==='k');$('tRiwayat').setAttribute('aria-pressed',k!=='k')}
+$('tKasir').onclick=()=>show('k');$('tRiwayat').onclick=()=>show('r');
+function armed(btn,label,fn){let t;btn.onclick=()=>{if(btn.dataset.arm){clearTimeout(t);delete btn.dataset.arm;btn.textContent=label;fn();return}btn.dataset.arm=1;btn.textContent='Klik lagi untuk konfirmasi';t=setTimeout(()=>{delete btn.dataset.arm;btn.textContent=label},4000)}}
+armed($('clrHist'),'Hapus riwayat penjualan',()=>{history=[];save();renderHist()});
+armed($('reset'),'Reset data stok dan riwayat',()=>{products=SEED.map(x=>({...x}));history=[];cart={};save();renderCart();renderHist()});
+renderCart();renderHist();
+</script>
+</body>
+</html>
